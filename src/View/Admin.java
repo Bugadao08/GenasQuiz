@@ -87,6 +87,11 @@ public class Admin extends javax.swing.JFrame {
 
         jMenu5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/View/Imagem/all student result.png"))); // NOI18N
         jMenu5.setText("Resultados dos Estudantes");
+        jMenu5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu5MouseClicked(evt);
+            }
+        });
         jMenuBar1.add(jMenu5);
 
         jMenu6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/View/Imagem/Logout.png"))); // NOI18N
@@ -175,6 +180,17 @@ public class Admin extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(jf, "One form is allready Openf");
         }
     }//GEN-LAST:event_jMenu3MouseClicked
+
+    private void jMenu5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu5MouseClicked
+        if (open == 0) {
+            new ResultadoEstudante().setVisible(true);
+            open = 1;
+        } else {
+            JFrame jf = new JFrame();
+            jf.setAlwaysOnTop(true);
+            JOptionPane.showMessageDialog(jf, "One form is allready Openf");
+        }
+    }//GEN-LAST:event_jMenu5MouseClicked
 
     /**
      * @param args the command line arguments

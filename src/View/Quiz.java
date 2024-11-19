@@ -16,7 +16,11 @@ import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import javax.swing.Timer;
 
 /**
@@ -24,7 +28,7 @@ import javax.swing.Timer;
  * @author genil
  */
 public class Quiz extends javax.swing.JFrame {
-
+    private ArrayList<String[]> perguntas;
     public String questaoId = "1";
     public String correcta;
     public int min = 0;
@@ -71,25 +75,60 @@ public class Quiz extends javax.swing.JFrame {
         }
         
     }
-    public void questao(){
+     public void questao(){
+    try {
+        Connection con = ProvedorConexao.getCon();
+        Statement st = con.createStatement();
+        ResultSet rsl = st.executeQuery("select *from questao where id='" + questaoId + "'");
+        if (rsl.next()) {
+            jLabel12.setText(rsl.getString(1));  // Número da questão
+            jLabel20.setText(rsl.getString(2));  // Pergunta
+
+            // Recupera as alternativas da consulta SQL
+            String alternativa1 = rsl.getString(3);
+            String alternativa2 = rsl.getString(4);
+            String alternativa3 = rsl.getString(5);
+            String alternativa4 = rsl.getString(6);
+            correcta = rsl.getString(7); // Resposta correta
+
+            // Cria uma lista com as alternativas e embaralha
+            List<String> alternativas = Arrays.asList(alternativa1, alternativa2, alternativa3, alternativa4);
+            Collections.shuffle(alternativas);
+
+            // Define as alternativas embaralhadas nos botões
+            jRadioButton1.setText(alternativas.get(0));
+            jRadioButton2.setText(alternativas.get(1));
+            jRadioButton3.setText(alternativas.get(2));
+            jRadioButton4.setText(alternativas.get(3));
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, e);
+    }
+}
+
+
+    // Método para carregar e embaralhar as perguntas do banco de dados
+    public void carregarQuestoes() {
+        perguntas = new ArrayList<>();
         try {
             Connection con = ProvedorConexao.getCon();
             Statement st = con.createStatement();
-            ResultSet rsl=st.executeQuery("select *from questao where id='"+questaoId+"'");
-            while(rsl.next()){
-                jLabel12.setText(rsl.getString(1));
-                jLabel20.setText(rsl.getString(2));
-                jRadioButton1.setText(rsl.getString(3));
-                jRadioButton2.setText(rsl.getString(4));
-                jRadioButton3.setText(rsl.getString(5));
-                jRadioButton4.setText(rsl.getString(6));
-                correcta=rsl.getString(7);
+            ResultSet rs = st.executeQuery("select * from questao");
+
+            while (rs.next()) {
+                String[] questao = new String[5];
+                questao[0] = rs.getString(2); // Pergunta
+                questao[1] = rs.getString(3); // Resposta 1
+                questao[2] = rs.getString(4); // Resposta 2
+                questao[3] = rs.getString(5); // Resposta 3
+                questao[4] = rs.getString(6); // Resposta 4
+                perguntas.add(questao);
             }
+            Collections.shuffle(perguntas); // Embaralha as perguntas
 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null,e);
+            JOptionPane.showMessageDialog(null, e);
         }
-        
     }
     public void submit(){
         String id=jLabel4.getText();
@@ -113,7 +152,7 @@ public class Quiz extends javax.swing.JFrame {
      */
     public Quiz() {
         initComponents();
-        setSize(1050, 535);
+        setSize(1050, 530);
         setLocationRelativeTo(null); // Centraliza a janela na tela
 
     }
@@ -162,7 +201,7 @@ public class Quiz extends javax.swing.JFrame {
                 if(sec==60){
                     sec=0;
                     min++;
-                    if(min==10){
+                    if(min==1){
                         time.stop();
                         correctaCheck();
                         submit();

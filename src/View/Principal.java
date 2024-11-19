@@ -4,6 +4,10 @@
  */
 package View;
 
+import java.io.File;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -74,6 +78,16 @@ public class Principal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        try {
+        // Caminho do arquivo de áudio
+        File file = new File("src/View/Imagem/Formulario.wav");
+        AudioInputStream audioStream = AudioSystem.getAudioInputStream(file);
+        Clip clip = AudioSystem.getClip();
+        clip.open(audioStream);
+        clip.start();
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
         new TelaEstudante().setVisible(true);
         dispose();
     }//GEN-LAST:event_jButton1ActionPerformed

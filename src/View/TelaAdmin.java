@@ -4,6 +4,10 @@
  */
 package View;
 
+import java.io.File;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.JOptionPane;
 
 /**
@@ -94,7 +98,17 @@ public class TelaAdmin extends javax.swing.JFrame {
             new Admin().setVisible(true);
             dispose();
         }else{
-            JOptionPane.showMessageDialog(null,"Nome ou senha de administrador errada.");
+              try {
+        // Caminho do arquivo de áudio
+        File file = new File("src/View/Imagem/AcessoNegado.wav");
+        AudioInputStream audioStream = AudioSystem.getAudioInputStream(file);
+        Clip clip = AudioSystem.getClip();
+        clip.open(audioStream);
+        clip.start();
+    } catch (Exception e) {
+        e.printStackTrace();
+    }                   
+            JOptionPane.showMessageDialog(null,"Entre como Estudante.");
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
